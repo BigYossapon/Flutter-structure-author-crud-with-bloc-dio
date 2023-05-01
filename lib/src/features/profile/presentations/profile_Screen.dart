@@ -1,3 +1,4 @@
+import 'package:apptester/src/features/profile/presentations/testr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -34,133 +35,179 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     //set form sharepref
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 5.0,
-          ),
-          Container(),
-          MaterialButton(
-            color: Colors.blue,
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                print('Form Complete');
-                _formKey.currentState!.save();
-              }
-            },
-            child: const Text('select image'),
-          ),
-          const SizedBox(
-            height: 5.0,
-          ),
-          TextFormField(
-            controller: username,
-            validator: (value) =>
-                value!.isEmpty ? 'Input cannot be empty!' : null,
-            decoration: const InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                // เมื่อ focus
-                borderSide: BorderSide(width: 1.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                // สถานะปกติ
-                borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-              ),
-              labelText: 'Username',
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          //crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(
+              height: 5.0,
             ),
-          ),
-          TextFormField(
-            controller: password,
-            validator: (value) =>
-                value!.isEmpty ? 'Input cannot be empty!' : null,
-            decoration: const InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                // เมื่อ focus
-                borderSide: BorderSide(width: 1.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                controller: username,
+                validator: (value) =>
+                    value!.isEmpty ? 'Input cannot be empty!' : null,
+                decoration: const InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    // เมื่อ focus
+                    borderSide: BorderSide(width: 1.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // สถานะปกติ
+                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                  ),
+                  labelText: 'Username',
+                ),
               ),
-              enabledBorder: OutlineInputBorder(
-                // สถานะปกติ
-                borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-              ),
-              labelText: 'Password',
             ),
-          ),
-          TextFormField(
-            controller: email,
-            validator: (value) =>
-                value!.isEmpty ? 'Input cannot be empty!' : null,
-            decoration: const InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                // เมื่อ focus
-                borderSide: BorderSide(width: 1.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                // สถานะปกติ
-                borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-              ),
-              labelText: 'Email',
+            const SizedBox(
+              height: 5.0,
             ),
-          ),
-          TextFormField(
-            controller: address,
-            validator: (value) =>
-                value!.isEmpty ? 'Input cannot be empty!' : null,
-            decoration: const InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                // เมื่อ focus
-                borderSide: BorderSide(width: 1.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                controller: password,
+                validator: (value) =>
+                    value!.isEmpty ? 'Input cannot be empty!' : null,
+                decoration: const InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    // เมื่อ focus
+                    borderSide: BorderSide(width: 1.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // สถานะปกติ
+                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                  ),
+                  labelText: 'Password',
+                ),
               ),
-              enabledBorder: OutlineInputBorder(
-                // สถานะปกติ
-                borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-              ),
-              labelText: 'Address',
             ),
-          ),
-          TextFormField(
-            controller: country,
-            validator: (value) =>
-                value!.isEmpty ? 'Input cannot be empty!' : null,
-            decoration: const InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                // เมื่อ focus
-                borderSide: BorderSide(width: 1.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                // สถานะปกติ
-                borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-              ),
-              labelText: 'Country',
+            const SizedBox(
+              height: 5.0,
             ),
-          ),
-          MaterialButton(
-            color: Colors.blue,
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                print('Form Complete');
-                _formKey.currentState!.save();
-              }
-            },
-            child: const Text('edit'),
-          ),
-          Container(
-            height: 5,
-          ),
-          MaterialButton(
-            color: Colors.blue,
-            onPressed: () {
-              // Navigator.of(context).pushReplacement(
-              //     MaterialPageRoute(builder: (context) => LoginScreen()));
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              );
-            },
-            child: const Text('logout'),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                controller: email,
+                validator: (value) =>
+                    value!.isEmpty ? 'Input cannot be empty!' : null,
+                decoration: const InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    // เมื่อ focus
+                    borderSide: BorderSide(width: 1.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // สถานะปกติ
+                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                  ),
+                  labelText: 'Email',
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 5.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                controller: address,
+                validator: (value) =>
+                    value!.isEmpty ? 'Input cannot be empty!' : null,
+                decoration: const InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    // เมื่อ focus
+                    borderSide: BorderSide(width: 1.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // สถานะปกติ
+                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                  ),
+                  labelText: 'Address',
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 5.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                controller: country,
+                validator: (value) =>
+                    value!.isEmpty ? 'Input cannot be empty!' : null,
+                decoration: const InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    // เมื่อ focus
+                    borderSide: BorderSide(width: 1.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    // สถานะปกติ
+                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                  ),
+                  labelText: 'Country',
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 5.0,
+            ),
+            Container(
+              height: 50,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+              child: TextButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    print('Form Complete');
+                    _formKey.currentState!.save();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
+                  }
+                },
+                child: const Text(
+                  'Edit Profile',
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ),
+            ),
+            Container(
+              height: 5,
+            ),
+            Container(
+              height: 50,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(20)),
+              child: TextButton(
+                onPressed: () async {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => const LoginScreen()),
+                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Sttttt()),
+                  );
+                },
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
