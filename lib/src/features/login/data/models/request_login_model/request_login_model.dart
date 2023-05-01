@@ -5,18 +5,18 @@ import 'package:json_annotation/json_annotation.dart';
 part 'request_login_model.g.dart';
 
 @JsonSerializable()
-class RequestEmployeeModel {
-  @JsonKey(name: 'Username')
-  int? username;
-  @JsonKey(name: 'Password')
+class RequestLoginModel {
+  @JsonKey(name: 'username')
+  String? username;
+  @JsonKey(name: 'password')
   String? password;
 
-  RequestEmployeeModel({
+  RequestLoginModel({
     this.username,
     this.password,
   });
 
-  factory RequestEmployeeModel.fromJson(Map<String, dynamic> json) =>
+  factory RequestLoginModel.fromJson(Map<String, dynamic> json) =>
       _$RequestLoginModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$RequestLoginModelToJson(this);
