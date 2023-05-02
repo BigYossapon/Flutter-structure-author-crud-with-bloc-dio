@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'response_getprofile_model.g.dart';
+part 'response_login_model.g.dart';
 
 @JsonSerializable()
-class ResponseGetProfileModel {
+class ResponseLoginModel {
+  @JsonKey(name: 'id')
+  int? id;
   @JsonKey(name: 'username')
   String? username;
   @JsonKey(name: 'email')
@@ -17,11 +19,11 @@ class ResponseGetProfileModel {
   @JsonKey(name: 'avartar')
   String? avartar;
 
-  ResponseGetProfileModel(
+  ResponseLoginModel(
       {this.username, this.email, this.address, this.country, this.avartar});
 
-  factory ResponseGetProfileModel.fromJson(Map<String, dynamic> json) =>
-      _$ResponseGetProfileModelFromJson(json);
+  factory ResponseLoginModel.fromJson(Map<String, dynamic> json) =>
+      _$ResponseLoginModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ResponseGetProfileModelToJson(this);
+  Map<String, dynamic> toJson() => _$ResponseLoginModelToJson(this);
 }
