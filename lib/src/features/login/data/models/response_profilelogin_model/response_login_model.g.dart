@@ -13,6 +13,9 @@ ResponseLoginModel _$ResponseLoginModelFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String?,
       country: json['country'] as String?,
       avartar: json['avartar'] as String?,
+      roles:
+          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      accessToken: json['accessToken'] as String?,
     )..id = json['id'] as int?;
 
 Map<String, dynamic> _$ResponseLoginModelToJson(ResponseLoginModel instance) =>
@@ -23,4 +26,6 @@ Map<String, dynamic> _$ResponseLoginModelToJson(ResponseLoginModel instance) =>
       'address': instance.address,
       'country': instance.country,
       'avartar': instance.avartar,
+      'roles': instance.roles,
+      'accessToken': instance.accessToken,
     };

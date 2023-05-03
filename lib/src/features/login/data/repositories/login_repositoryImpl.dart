@@ -32,7 +32,7 @@ class LoginRepositoryimpl extends LoginRepository {
   // }
 
   @override
-  Future<void> loginUser(RequestLoginModel requestLoginModel) {
+  Future<ResponseLoginModel> loginUser(RequestLoginModel requestLoginModel) {
     // TODO: implement postEmployeeData
     return _loginApiService.loginUser(requestLoginModel);
 

@@ -18,5 +18,6 @@ abstract class LoginApiService {
   // Future<ResponseLoginModel> getUserdataformUsername();
 
   @POST('user/login')
-  Future<void> loginUser(@Body() RequestLoginModel requestLoginModel);
+  Future<ResponseLoginModel> loginUser(
+      @Body() RequestLoginModel requestLoginModel);
 }

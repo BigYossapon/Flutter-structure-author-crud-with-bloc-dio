@@ -1,10 +1,22 @@
 part of 'post_register_bloc.dart';
 
-abstract class PostRegisterState extends Equatable {
-  const PostRegisterState();
-  
+abstract class PostRegisterState extends Equatable {}
+
+class PostRegisterLoadingState extends PostRegisterState {
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class PostRegisterInitial extends PostRegisterState {}
+class PostRegisterSuccessState extends PostRegisterState {
+  late String status;
+  PostRegisterSuccessState(this.status);
+  @override
+  List<Object?> get props => [status];
+}
+
+class PostRegisterErrorState extends PostRegisterState {
+  late String status;
+  PostRegisterErrorState(this.status);
+  @override
+  List<Object?> get props => [status];
+}

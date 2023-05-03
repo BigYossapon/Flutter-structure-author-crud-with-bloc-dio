@@ -18,9 +18,19 @@ class ResponseLoginModel {
   String? country;
   @JsonKey(name: 'avartar')
   String? avartar;
+  @JsonKey(name: 'roles')
+  List<String>? roles;
+  @JsonKey(name: 'accessToken')
+  String? accessToken;
 
   ResponseLoginModel(
-      {this.username, this.email, this.address, this.country, this.avartar});
+      {this.username,
+      this.email,
+      this.address,
+      this.country,
+      this.avartar,
+      this.roles,
+      this.accessToken});
 
   factory ResponseLoginModel.fromJson(Map<String, dynamic> json) =>
       _$ResponseLoginModelFromJson(json);
