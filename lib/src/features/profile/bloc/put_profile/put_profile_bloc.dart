@@ -2,6 +2,7 @@ import 'package:apptester/src/features/profile/data/models/request_editprofile_m
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../utils/user_secure__storage.dart';
 import '../../data/repositories/profile_repository.dart';
 
 part 'put_profile_event.dart';
@@ -16,6 +17,7 @@ class PutProfileBloc extends Bloc<PutProfileEvent, PutProfileState> {
 
       emit(PutProfileEditingState());
       try {
+        final token = await UserSecureStorage.getToken();
         await _profileRepository.editProfile(
             token!, event.id, event.requestEditProfileModel);
       } catch (e) {

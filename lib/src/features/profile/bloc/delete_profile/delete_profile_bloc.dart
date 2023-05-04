@@ -1,4 +1,5 @@
 import 'package:apptester/src/features/profile/data/models/request_deleteprofile_model/request_deleteprofile_model.dart';
+import 'package:apptester/src/utils/user_secure__storage.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,8 +16,11 @@ class DeleteProfileBloc extends Bloc<DeleteProfileEvent, DeleteProfileState> {
       //call token form secure storage
       emit(DeletingProfileState());
       try {
+        final token = await UserSecureStorage.getToken();
         await _profileRepository.deleteProfile(
             token!, event.id, event.requestDeleteProfileModel);
+
+        emit(DeleteProfileSuccessState());
       } catch (e) {
         emit(DeleteProfileErrorState(e.toString()));
       }

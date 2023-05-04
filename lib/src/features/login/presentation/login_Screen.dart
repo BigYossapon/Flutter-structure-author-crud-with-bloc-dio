@@ -1,6 +1,7 @@
 import 'package:apptester/src/features/register/presentation/register_Screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/user_secure__storage.dart';
 import '../../home/presentations/home_Screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +16,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final username = TextEditingController();
   final password = TextEditingController();
 
+  bool isLogin = false;
+
   @override
   void dispose() {
     username.dispose(); // ยกเลิกการใช้งานที่เกี่ยวข้องทั้งหมดถ้ามี
@@ -27,6 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement initState
 
     super.initState();
+  }
+
+  Future init() async {
+    final token = await UserSecureStorage.getToken();
+    var isLoggedIn = (token == null) ? false : token.isNotEmpty;
   }
 
   @override
