@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/post_register/post_register_bloc.dart';
+import '../data/repositories/register_repositoryImpl.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -32,165 +36,171 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: username,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
+    final RegisterBloc = BlocProvider<PostRegisterBloc>(
+        create: (context) => PostRegisterBloc(RegisterRepositoryimpl()));
+    return MultiBlocProvider(
+      providers: [RegisterBloc],
+      child: Scaffold(
+        body: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: username,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Username',
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Username',
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: password,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: password,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Password',
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Password',
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: email,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: email,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Email',
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Email',
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: address,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: address,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Address',
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Address',
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: country,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: country,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Country',
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Country',
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Container(
-              height: 50,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    print('Form Complete');
-                    _formKey.currentState!.save();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-                  }
+              const SizedBox(
+                height: 5.0,
+              ),
+              Container(
+                height: 50,
+                width: 250,
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(20)),
+                child: TextButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      print('Form Complete');
+                      _formKey.currentState!.save();
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                    }
+                  },
+                  child: const Text(
+                    'Register',
+                    style: TextStyle(color: Colors.white, fontSize: 25),
+                  ),
+                ),
+              ),
+              Container(
+                height: 5,
+              ),
+              TextButton(
+                onPressed: () {
+                  //TODO FORGOT PASSWORD SCREEN GOES HERE
+                  Navigator.pop(context);
                 },
                 child: const Text(
-                  'Register',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  'Back',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
                 ),
               ),
-            ),
-            Container(
-              height: 5,
-            ),
-            TextButton(
-              onPressed: () {
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'Back',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLogin = UserSharedPreferences.getLoggedin() ?? false;
+    bool isLogin = token != null ?? false;
 
     return isLogin ? const HomeScreen() : const LoginScreen();
   }
