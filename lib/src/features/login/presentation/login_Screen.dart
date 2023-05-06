@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/user_secure__storage.dart';
 import '../../home/presentations/home_Screen.dart';
 import '../bloc/post_login/post_login_bloc.dart';
+import '../data/models/request_login_model/request_login_model.dart';
 import '../data/repositories/login_repositoryImpl.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,13 +19,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final username = TextEditingController();
   final password = TextEditingController();
-
-  bool isLogin = false;
+  late RequestLoginModel requestLoginModel;
 
   @override
   void dispose() {
     username.dispose(); // ยกเลิกการใช้งานที่เกี่ยวข้องทั้งหมดถ้ามี
     password.dispose();
+
     super.dispose();
   }
 
@@ -103,25 +104,79 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 5.0,
               ),
-              Container(
-                height: 50,
-                width: 250,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(20)),
-                child: TextButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      print('Form Complete');
-                      _formKey.currentState!.save();
+              BlocListener<PostLoginBloc, PostLoginState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                  if (state is PostLoginErrorState) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Username or Password invalid!"),
+                    ));
+                  }
+                  if (state is PostLoginSuccessState) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Login Success!"),
+                    ));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
+                  }
+                  if (state is PostLoginLoadingState) {
+                    _fetchData(context);
+                  }
+                },
+                child: BlocConsumer<PostLoginBloc, PostLoginState>(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                    if (state is PostLoginErrorState) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Username or Password invalid!"),
+                      ));
+                    }
+                    if (state is PostLoginSuccessState) {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Login Success!"),
+                      ));
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const HomeScreen()));
                     }
+                    if (state is PostLoginLoadingState) {
+                      _fetchData(context);
+                    }
                   },
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                  ),
+                  builder: (context, state) {
+                    if (state is PostLoginErrorState) {}
+                    if (state is PostLoginSuccessState) {}
+                    if (state is PostLoginLoadingState) {}
+                    return Container(
+                      height: 50,
+                      width: 250,
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: TextButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            print('Form Complete');
+                            _formKey.currentState!.save();
+
+                            requestLoginModel.username = username.text;
+                            requestLoginModel.password = password.text;
+
+                            context
+                                .read<PostLoginBloc>()
+                                .add(LoginEvent(requestLoginModel));
+                          }
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white, fontSize: 25),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Container(
@@ -147,4 +202,33 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+void _fetchData(BuildContext context) async {
+  // show the loading dialog
+  showDialog(
+      // The user CANNOT close this dialog  by pressing outsite it
+      barrierDismissible: false,
+      context: context,
+      builder: (_) {
+        return Dialog(
+          // The background color
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                // The loading indicator
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 15,
+                ),
+                // Some text
+                Text('Loading...')
+              ],
+            ),
+          ),
+        );
+      });
 }
