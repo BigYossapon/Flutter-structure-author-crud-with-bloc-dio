@@ -1,4 +1,5 @@
 import 'package:apptester/src/features/register/presentation/register_Screen.dart';
+import 'package:apptester/src/utils/user_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -105,15 +106,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 5.0,
               ),
               BlocListener<PostLoginBloc, PostLoginState>(
-                listener: (context, state) {
+                listener: (context, state) async {
                   // TODO: implement listener
                   if (state is PostLoginErrorState) {
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Username or Password invalid!"),
-                    ));
+                    final snackBar = SnackBar(content: Text(state.status));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                   if (state is PostLoginSuccessState) {
+                    String? token = state.data.accessToken;
+                    String? id = state.data.id.toString();
+                    await UserSecureStorage.setToken(token!);
+                    UserSharedPreferences.setUsername(state.data.username);
+                    UserSharedPreferences.setEmail(state.data.email);
+                    UserSharedPreferences.setAddress(state.data.address);
+                    UserSharedPreferences.setCountry(state.data.country);
+                    UserSharedPreferences.setAvartar(state.data.avartar);
+                    UserSharedPreferences.setRoles(state.data.roles);
+                    UserSharedPreferences.setId(id as int);
+
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text("Login Success!"),
@@ -122,61 +133,34 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (context) => const HomeScreen()));
                   }
                   if (state is PostLoginLoadingState) {
-                    _fetchData(context);
+                    _Loading(context);
                   }
                 },
-                child: BlocConsumer<PostLoginBloc, PostLoginState>(
-                  listener: (context, state) {
-                    // TODO: implement listener
-                    if (state is PostLoginErrorState) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Username or Password invalid!"),
-                      ));
-                    }
-                    if (state is PostLoginSuccessState) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Login Success!"),
-                      ));
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const HomeScreen()));
-                    }
-                    if (state is PostLoginLoadingState) {
-                      _fetchData(context);
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is PostLoginErrorState) {}
-                    if (state is PostLoginSuccessState) {}
-                    if (state is PostLoginLoadingState) {}
-                    return Container(
-                      height: 50,
-                      width: 250,
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            print('Form Complete');
-                            _formKey.currentState!.save();
+                child: Container(
+                  height: 50,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        print('Form Complete');
+                        _formKey.currentState!.save();
 
-                            requestLoginModel.username = username.text;
-                            requestLoginModel.password = password.text;
+                        requestLoginModel.username = username.text;
+                        requestLoginModel.password = password.text;
 
-                            context
-                                .read<PostLoginBloc>()
-                                .add(LoginEvent(requestLoginModel));
-                          }
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 25),
-                        ),
-                      ),
-                    );
-                  },
+                        context
+                            .read<PostLoginBloc>()
+                            .add(LoginEvent(requestLoginModel));
+                      }
+                    },
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                  ),
                 ),
               ),
               Container(
@@ -204,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-void _fetchData(BuildContext context) async {
+void _Loading(BuildContext context) async {
   // show the loading dialog
   showDialog(
       // The user CANNOT close this dialog  by pressing outsite it

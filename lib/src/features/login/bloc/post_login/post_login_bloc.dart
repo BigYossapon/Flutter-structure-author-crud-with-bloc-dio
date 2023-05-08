@@ -18,9 +18,6 @@ class PostLoginBloc extends Bloc<PostLoginEvent, PostLoginState> {
       emit(PostLoginLoadingState());
       try {
         final data = await _loginRepository.loginUser(event.requestLoginModel);
-        final String? token = data.accessToken;
-        await UserSecureStorage.setToken(token!);
-
         emit(PostLoginSuccessState(data));
       } catch (e) {
         emit(PostLoginErrorState(e.toString()));

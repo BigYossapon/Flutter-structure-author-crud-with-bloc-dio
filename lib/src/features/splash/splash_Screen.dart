@@ -16,11 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   String? token;
-  DateTime? dateex;
-  List<String> listex = [];
-  String? tokenpref;
-  DateTime? dateexpref;
-  List<String> listexpref = [];
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -30,9 +26,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    tokenpref = UserSharedPreferences.getToken() ?? '';
-    listexpref = UserSharedPreferences.getLists() ?? [];
-    dateexpref = UserSharedPreferences.getdate();
+    //tokenpref = UserSharedPreferences.getToken() ?? '';
+    //listexpref = UserSharedPreferences.getLists() ?? [];
+    //dateexpref = UserSharedPreferences.getdate();
 
     init();
     super.initState();
@@ -40,12 +36,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future init() async {
     final token = await UserSecureStorage.getToken();
-    final dateex = await UserSecureStorage.getDates();
-    final listex = await UserSecureStorage.getLists();
+    // final dateex = await UserSecureStorage.getDates();
+    // final listex = await UserSecureStorage.getLists();
 
     setState(() {
-      this.listex = listex!;
-      this.dateex = dateex;
+      // this.listex = listex!;
+      // this.dateex = dateex;
       this.token = token!;
     });
   }
