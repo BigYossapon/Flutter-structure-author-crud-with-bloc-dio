@@ -267,6 +267,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _Loading(context);
                   }
                   if (state is PutProfileEditSuccessState) {
+                    UserSharedPreferences.setAddress(address.text);
+                    UserSharedPreferences.setAvartar(avartar);
+                    UserSharedPreferences.setCountry(country.text);
+
                     Navigator.of(context).pop();
                     final snackBar =
                         SnackBar(content: Text('Edit Profile Success!'));
