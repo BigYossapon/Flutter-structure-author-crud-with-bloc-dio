@@ -8,15 +8,15 @@ part of 'response_login_model.dart';
 
 ResponseLoginModel _$ResponseLoginModelFromJson(Map<String, dynamic> json) =>
     ResponseLoginModel(
-      username: json['username'] as String?,
-      email: json['email'] as String?,
-      address: json['address'] as String?,
-      country: json['country'] as String?,
-      avartar: json['avartar'] as String?,
-      roles:
-          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      accessToken: json['accessToken'] as String?,
-    )..id = json['id'] as int?;
+      id: json['id'] as int,
+      username: json['username'] as String,
+      email: json['email'] as String,
+      address: json['address'] as String,
+      country: json['country'] as String,
+      avartar: json['avartar'] as String,
+      roles: (json['roles'] as List<dynamic>).map((e) => e as String).toList(),
+      accessToken: json['accessToken'] as String,
+    );
 
 Map<String, dynamic> _$ResponseLoginModelToJson(ResponseLoginModel instance) =>
     <String, dynamic>{

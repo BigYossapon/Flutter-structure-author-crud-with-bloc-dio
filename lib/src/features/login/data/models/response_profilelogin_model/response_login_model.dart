@@ -7,30 +7,31 @@ part 'response_login_model.g.dart';
 @JsonSerializable()
 class ResponseLoginModel {
   @JsonKey(name: 'id')
-  int? id;
+  int id;
   @JsonKey(name: 'username')
-  String? username;
+  String username;
   @JsonKey(name: 'email')
-  String? email;
+  String email;
   @JsonKey(name: 'address')
-  String? address;
+  String address;
   @JsonKey(name: 'country')
-  String? country;
+  String country;
   @JsonKey(name: 'avartar')
-  String? avartar;
+  String avartar;
   @JsonKey(name: 'roles')
-  List<String>? roles;
+  List<String> roles;
   @JsonKey(name: 'accessToken')
-  String? accessToken;
+  String accessToken;
 
   ResponseLoginModel(
-      {this.username,
-      this.email,
-      this.address,
-      this.country,
-      this.avartar,
-      this.roles,
-      this.accessToken});
+      {required this.id,
+      required this.username,
+      required this.email,
+      required this.address,
+      required this.country,
+      required this.avartar,
+      required this.roles,
+      required this.accessToken});
 
   factory ResponseLoginModel.fromJson(Map<String, dynamic> json) =>
       _$ResponseLoginModelFromJson(json);

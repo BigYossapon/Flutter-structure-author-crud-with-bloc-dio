@@ -39,16 +39,16 @@ class _SplashScreenState extends State<SplashScreen> {
     // final dateex = await UserSecureStorage.getDates();
     // final listex = await UserSecureStorage.getLists();
 
-    setState(() {
-      // this.listex = listex!;
-      // this.dateex = dateex;
-      this.token = token!;
-    });
+    // setState(() {
+    //   // this.listex = listex!;
+    //   // this.dateex = dateex;
+    //   this.token = token!;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isLogin = token != null ?? false;
+    bool isLogin = token != null;
 
     return isLogin ? const HomeScreen() : const LoginScreen();
   }

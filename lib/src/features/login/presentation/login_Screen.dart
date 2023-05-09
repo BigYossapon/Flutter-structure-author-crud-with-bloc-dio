@@ -20,7 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final username = TextEditingController();
   final password = TextEditingController();
-  late RequestLoginModel requestLoginModel;
+
+  //late RequestLoginModel requestLoginModel;
 
   @override
   void dispose() {
@@ -37,18 +38,13 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
-  Future init() async {
-    final token = await UserSecureStorage.getToken();
-    var isLoggedIn = (token == null) ? false : token.isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final LoginBloc = BlocProvider<PostLoginBloc>(
-        create: (context) => PostLoginBloc(LoginRepositoryimpl()));
+    final loginBloc = BlocProvider<PostLoginBloc>(
+        create: (BuildContext context) => PostLoginBloc(LoginRepositoryimpl()));
 
     return MultiBlocProvider(
-      providers: [LoginBloc],
+      providers: [loginBloc],
       child: Scaffold(
         body: Form(
           key: _formKey,
@@ -116,14 +112,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state is PostLoginSuccessState) {
                     String? token = state.data.accessToken;
                     String? id = state.data.id.toString();
-                    await UserSecureStorage.setToken(token!);
-                    UserSharedPreferences.setUsername(state.data.username);
-                    UserSharedPreferences.setEmail(state.data.email);
-                    UserSharedPreferences.setAddress(state.data.address);
-                    UserSharedPreferences.setCountry(state.data.country);
-                    UserSharedPreferences.setAvartar(state.data.avartar);
-                    UserSharedPreferences.setRoles(state.data.roles);
-                    UserSharedPreferences.setId(id as int);
+                    await UserSecureStorage.setToken(token);
+                    await UserSharedPreferences.setUsername(
+                        state.data.username);
+                    await UserSharedPreferences.setEmail(state.data.email);
+                    await UserSharedPreferences.setAddress(state.data.address);
+                    await UserSharedPreferences.setCountry(state.data.country);
+                    await UserSharedPreferences.setAvartar(state.data.avartar);
+                    await UserSharedPreferences.setRoles(state.data.roles);
+                    await UserSharedPreferences.setId(id as int);
 
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -147,9 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (_formKey.currentState!.validate()) {
                         print('Form Complete');
                         _formKey.currentState!.save();
-
-                        requestLoginModel.username = username.text;
-                        requestLoginModel.password = password.text;
+                        final requestLoginModel = RequestLoginModel(
+                            username: username.text, password: password.text);
+                        // requestLoginModel.username = username.text;
+                        // requestLoginModel.password = password.text;
 
                         context
                             .read<PostLoginBloc>()

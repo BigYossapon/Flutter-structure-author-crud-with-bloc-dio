@@ -21,14 +21,14 @@ abstract class ProfileApiService {
 
   @PUT('user/edit/{id}')
   Future<void> editProfile(
-      @Header('Authorization') String token,
+      @Header('x-access-token') String token,
       @Path("id") int id,
       @Body() RequestEditProfileModel requestEditProfileModel);
 
   //DELETE
   @DELETE('user/delete/{id}')
   Future<void> deleteProfile(
-      @Header('Authorization') String token,
+      @Header('x-access-token') String token,
       @Path() int id,
       @Body() RequestDeleteProfileModel requestDeleteProfileModel);
 }

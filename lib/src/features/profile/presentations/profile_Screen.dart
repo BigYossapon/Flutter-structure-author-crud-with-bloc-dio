@@ -34,8 +34,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final country = TextEditingController();
   late String? avartar;
   late File? f_avartar;
-  late RequestDeleteProfileModel requestDeleteProfileModel;
-  late RequestEditProfileModel requestEditProfileModel;
 
   //final avartar = TextEditingController();
   @override
@@ -50,14 +48,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
-  void initState() {
+  Future<void> initState() async {
     // TODO: implement initState
-    username.text = UserSharedPreferences.getUsername();
-    email.text = UserSharedPreferences.getEmail();
-    address.text = UserSharedPreferences.getAddress();
-    country.text = UserSharedPreferences.getCountry();
-    avartar = UserSharedPreferences.getAvartar();
+    getUserSharedpreferences();
     super.initState();
+  }
+
+  getUserSharedpreferences() async {
+    await UserSharedPreferences.getUsername().then((value) {
+      setState(() {
+        username.text = value!;
+      });
+    });
+
+    await UserSharedPreferences.getEmail().then((value) {
+      setState(() {
+        address.text = value!;
+      });
+    });
+
+    await UserSharedPreferences.getAddress().then((value) {
+      setState(() {
+        address.text = value!;
+      });
+    });
+
+    await UserSharedPreferences.getCountry().then((value) {
+      setState(() {
+        country.text = value!;
+      });
+    });
+
+    await UserSharedPreferences.getAvartar().then((value) {
+      setState(() {
+        avartar = value!;
+      });
+    });
   }
 
   @override
@@ -124,6 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextButton(
                     onPressed: () {
                       //TODO FORGOT PASSWORD SCREEN GOES HERE
+                      requestGalleryPermission(context);
                     },
                     child: const Text(
                       'Upload Avartar from Gallery',
@@ -133,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextButton(
                     onPressed: () {
                       //TODO FORGOT PASSWORD SCREEN GOES HERE
+                      requestCameraPermission(context);
                     },
                     child: const Text(
                       'Upload Avartar from Camera',
@@ -261,15 +289,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 5.0,
               ),
               BlocListener<PutProfileBloc, PutProfileState>(
-                listener: (context, state) {
+                listener: (context, state) async {
                   // TODO: implement listener
                   if (state is PutProfileEditingState) {
                     _Loading(context);
                   }
                   if (state is PutProfileEditSuccessState) {
-                    UserSharedPreferences.setAddress(address.text);
-                    UserSharedPreferences.setAvartar(avartar);
-                    UserSharedPreferences.setCountry(country.text);
+                    await UserSharedPreferences.setAddress(address.text);
+                    await UserSharedPreferences.setAvartar(avartar!);
+                    await UserSharedPreferences.setCountry(country.text);
 
                     Navigator.of(context).pop();
                     final snackBar =
@@ -293,16 +321,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       if (_formKey.currentState!.validate()) {
                         print('Form Complete');
                         _formKey.currentState!.save();
-                        int id = UserSharedPreferences.getId();
-                        _dialogEdit(
-                            context,
-                            requestEditProfileModel,
-                            username.text,
-                            password.text,
-                            address.text,
-                            avartar!,
-                            country.text,
-                            email.text);
+
+                        _dialogEdit(context, username.text, password.text,
+                            address.text, avartar!, country.text, email.text);
                       }
                     },
                     child: const Text(
@@ -327,11 +348,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SnackBar(content: Text('Delete Profile Success!'));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     await UserSecureStorage.setToken("");
-                    UserSharedPreferences.setAddress("");
-                    UserSharedPreferences.setUsername("");
-                    UserSharedPreferences.setAvartar("");
-                    UserSharedPreferences.setCountry("");
-                    UserSharedPreferences.setEmail("");
+                    await UserSharedPreferences.setAddress("");
+                    await UserSharedPreferences.setUsername("");
+                    await UserSharedPreferences.setAvartar("");
+                    await UserSharedPreferences.setCountry("");
+                    await UserSharedPreferences.setEmail("");
+                    await UserSharedPreferences.setId(0);
+                    await UserSharedPreferences.setRoles([""]);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -352,7 +375,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(20)),
                   child: TextButton(
                     onPressed: () async {
-                      _dialogDelete(context, requestDeleteProfileModel);
+                      _dialogDelete(context);
                     },
                     child: const Text(
                       'Delete Profile',
@@ -434,11 +457,13 @@ void _dialoglogout(BuildContext context) {
               TextButton(
                   onPressed: () async {
                     await UserSecureStorage.setToken("");
-                    UserSharedPreferences.setAddress("");
-                    UserSharedPreferences.setUsername("");
-                    UserSharedPreferences.setAvartar("");
-                    UserSharedPreferences.setCountry("");
-                    UserSharedPreferences.setEmail("");
+                    await UserSharedPreferences.setAddress("");
+                    await UserSharedPreferences.setUsername("");
+                    await UserSharedPreferences.setAvartar("");
+                    await UserSharedPreferences.setCountry("");
+                    await UserSharedPreferences.setEmail("");
+                    await UserSharedPreferences.setId(0);
+                    await UserSharedPreferences.setRoles([""]);
                     //UserSharedPreferences.password("");
                     Navigator.pop(context);
                     Navigator.push(
@@ -452,8 +477,7 @@ void _dialoglogout(BuildContext context) {
           ));
 }
 
-void _dialogDelete(
-    BuildContext context, RequestDeleteProfileModel requestDeleteProfileModel) {
+void _dialogDelete(BuildContext context) {
   showDialog(
       // The user CANNOT close this dialog  by pressing outsite it
       barrierDismissible: false,
@@ -469,28 +493,22 @@ void _dialogDelete(
                   child: const Text('Cancel')),
               TextButton(
                   onPressed: () async {
-                    int id = UserSharedPreferences.getId();
-                    requestDeleteProfileModel.id = id;
-                    requestDeleteProfileModel.username =
-                        UserSharedPreferences.getUsername();
+                    int? id = await UserSharedPreferences.getId();
+                    String? username =
+                        await UserSharedPreferences.getUsername();
+                    final requestDeleteProfileModel =
+                        RequestDeleteProfileModel(id: id, username: username);
                     Navigator.pop(context);
                     context.read<DeleteProfileBloc>().add(
-                        Delete_ProfileEvent(requestDeleteProfileModel, id));
+                        Delete_ProfileEvent(requestDeleteProfileModel, id!));
                   },
                   child: const Text('Confirm'))
             ],
           ));
 }
 
-void _dialogEdit(
-    BuildContext context,
-    RequestEditProfileModel requestEditProfileModel,
-    String username,
-    String password,
-    String address,
-    String avartar,
-    String country,
-    String email) {
+void _dialogEdit(BuildContext context, String username, String password,
+    String address, String avartar, String country, String email) {
   showDialog(
       // The user CANNOT close this dialog  by pressing outsite it
       barrierDismissible: false,
@@ -506,17 +524,19 @@ void _dialogEdit(
                   child: const Text('Cancel')),
               TextButton(
                   onPressed: () async {
-                    requestEditProfileModel.username = username;
-                    requestEditProfileModel.password = password;
-                    requestEditProfileModel.address = address;
-                    requestEditProfileModel.avartar = avartar;
-                    requestEditProfileModel.country = country;
-                    requestEditProfileModel.email = email;
-                    int id = UserSharedPreferences.getId();
+                    final requestEditProfileModel = RequestEditProfileModel(
+                        username: username,
+                        password: password,
+                        address: address,
+                        avartar: avartar,
+                        country: country,
+                        email: email);
+
+                    int? id = await UserSharedPreferences.getId();
                     Navigator.pop(context);
                     context
                         .read<PutProfileBloc>()
-                        .add(EditProfileEvent(requestEditProfileModel, id));
+                        .add(EditProfileEvent(requestEditProfileModel, id!));
                   },
                   child: const Text('Confirm'))
             ],
