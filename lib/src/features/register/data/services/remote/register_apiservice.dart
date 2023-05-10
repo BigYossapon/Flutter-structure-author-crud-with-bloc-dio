@@ -12,6 +12,6 @@ abstract class RegisterApiService {
   // @GET('user/get')
   // Future<ResponseLoginModel> getUserdataformUsername();
 
-  @POST('user/register')
+  @POST('api/auth/signup')
   Future<void> registerUser(@Body() RequestRegisterModel requestRegisterModel);
 }

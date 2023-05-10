@@ -18,7 +18,10 @@ class LoginRepositoryimpl extends LoginRepository {
 
   LoginRepositoryimpl() {
     //_loginApiService = LoginApiClient().getService();
+
     _dio = Dio();
+    _dio.interceptors
+        .add(LogInterceptor(requestBody: true, responseBody: true));
     _loginApiService = LoginApiService(_dio);
 
     // EmployeesApiService(_dio);

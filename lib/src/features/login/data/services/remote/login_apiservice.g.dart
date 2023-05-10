@@ -35,7 +35,7 @@ class _LoginApiService implements LoginApiService {
     )
             .compose(
               _dio.options,
-              'user/login',
+              'api/auth/signin',
               queryParameters: queryParameters,
               data: _data,
             )
