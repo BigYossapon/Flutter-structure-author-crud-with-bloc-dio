@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -33,7 +34,8 @@ class _ProfileLayoutState extends State<ProfileLayout> {
   final password = TextEditingController();
   final address = TextEditingController();
   final country = TextEditingController();
-  late String? avartar;
+  String token = '';
+  String avartar = '';
   late File? f_avartar = File('');
 
   //final avartar = TextEditingController();
@@ -45,6 +47,7 @@ class _ProfileLayoutState extends State<ProfileLayout> {
     address.dispose();
     country.dispose();
     f_avartar!.delete();
+
     super.dispose();
   }
 
@@ -68,9 +71,15 @@ class _ProfileLayoutState extends State<ProfileLayout> {
       });
     });
 
+    await UserSecureStorage.getToken().then((value) {
+      setState(() {
+        token = value!;
+      });
+    });
+
     await UserSharedPreferences.getEmail().then((value) {
       setState(() {
-        address.text = value!;
+        email.text = value!;
       });
     });
 
@@ -98,218 +107,316 @@ class _ProfileLayoutState extends State<ProfileLayout> {
     //set form sharepref
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(
-              height: 5.0,
-            ),
-            BlocListener<PickerAvartarProfileBloc, PickerAvartarProfileState>(
-              listener: (context, state) {
-                // TODO: implement listener
-                if (state is PickingAvartarProfileState) {
-                  _Loading(context);
-                }
-                if (state is PickedAvartarProfileState) {
-                  f_avartar = state.avartar;
-                  //avartar = f_avartar!.path;
-                  Navigator.of(context).pop();
-                  final snackBar =
-                      SnackBar(content: Text('Upload Avartar Success!'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-                if (state is PickErrorAvartarProfileState) {
-                  Navigator.of(context).pop();
-                  final snackBar = SnackBar(content: Text(state.status));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-              },
-              child: Container(
-                  child: f_avartar == null
-                      ? SizedBox(
-                          height: 150,
-                          width: 150,
-                          child:
-                              Image.network(AppStrings.avartarUrl + avartar!),
-                        )
-                      : SizedBox(
-                          height: 150,
-                          width: 150,
-                          child: Image.file(f_avartar!),
-                        )),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Row(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    //TODO FORGOT PASSWORD SCREEN GOES HERE
-                    requestGalleryPermission(context);
-                  },
-                  child: const Text(
-                    'Upload Avartar from Gallery',
-                    style: TextStyle(color: Colors.blue, fontSize: 10),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    //TODO FORGOT PASSWORD SCREEN GOES HERE
-                    requestCameraPermission(context);
-                  },
-                  child: const Text(
-                    'Upload Avartar from Camera',
-                    style: TextStyle(color: Colors.blue, fontSize: 10),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                readOnly: true,
-                enabled: false,
-                textAlignVertical: TextAlignVertical.center,
-                controller: username,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Username',
-                ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(
+                height: 5.0,
               ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: password,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Password',
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                readOnly: true,
-                enabled: false,
-                textAlignVertical: TextAlignVertical.center,
-                controller: email,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Email',
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: address,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Address',
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: country,
-                validator: (value) =>
-                    value!.isEmpty ? 'Input cannot be empty!' : null,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    // เมื่อ focus
-                    borderSide: BorderSide(width: 1.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    // สถานะปกติ
-                    borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
-                  ),
-                  labelText: 'Country',
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            BlocListener<PutProfileBloc, PutProfileState>(
-              listener: (context, state) async {
-                // TODO: implement listener
-                if (state is PutProfileEditingState) {
-                  _Loading(context);
-                }
-                if (state is PutProfileEditSuccessState) {
-                  await UserSharedPreferences.setAddress(address.text);
-                  await UserSharedPreferences.setAvartar(avartar!);
-                  await UserSharedPreferences.setCountry(country.text);
+              BlocConsumer<PickerAvartarProfileBloc, PickerAvartarProfileState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                  if (state is PickingAvartarProfileState) {
+                    _Loading(context);
+                  }
+                  if (state is PickedAvartarProfileState) {
+                    //avartar = f_avartar!.path;
+                    avartar = state.avartar.path;
+                    Navigator.of(context).pop();
+                    final snackBar =
+                        SnackBar(content: Text('Upload Avartar Success!'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                  if (state is PickErrorAvartarProfileState) {
+                    Navigator.of(context).pop();
+                    final snackBar = SnackBar(content: Text(state.status));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is PickedAvartarProfileState) {
+                    f_avartar = state.avartar;
+                    return Container(
+                        child: f_avartar != null
+                            ? SizedBox(
+                                height: 150,
+                                width: 150,
+                                child: Image.file(f_avartar!),
+                              )
+                            : Container());
+                  }
 
-                  Navigator.of(context).pop();
-                  final snackBar =
-                      SnackBar(content: Text('Edit Profile Success!'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-                if (state is PutProfileEditErrorState) {
-                  Navigator.of(context).pop();
-                  final snackBar = SnackBar(content: Text(state.status));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-              },
-              child: Container(
+                  return Container(
+                      child: avartar == null
+                          ? SizedBox(
+                              height: 150,
+                              width: 150,
+                              child: Image.asset(
+                                'assets/images/placeholder.png',
+                                fit: BoxFit.cover,
+                              ))
+                          : CircleAvatar(
+                              radius: 75,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: NetworkImage(
+                                'http://192.168.1.102:8000/uploads/Image_employee-1676535571507-101.jpg',
+                                headers: {
+                                  "x-access-token": token,
+                                },
+                              ),
+                            ));
+                },
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      //TODO FORGOT PASSWORD SCREEN GOES HERE
+                      requestGalleryPermission(context);
+                    },
+                    child: const Text(
+                      'Upload Avartar from Gallery',
+                      style: TextStyle(color: Colors.blue, fontSize: 10),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      //TODO FORGOT PASSWORD SCREEN GOES HERE
+                      requestCameraPermission(context);
+                    },
+                    child: const Text(
+                      'Upload Avartar from Camera',
+                      style: TextStyle(color: Colors.blue, fontSize: 10),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  readOnly: true,
+                  enabled: false,
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: username,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Username',
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: password,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Password',
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  readOnly: true,
+                  enabled: false,
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: email,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Email',
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: address,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Address',
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: country,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Input cannot be empty!' : null,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      // เมื่อ focus
+                      borderSide: BorderSide(width: 1.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      // สถานะปกติ
+                      borderSide: BorderSide(width: 1.0), // กำหนดสีในนี้ได้
+                    ),
+                    labelText: 'Country',
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              BlocListener<PutProfileBloc, PutProfileState>(
+                listener: (context, state) async {
+                  // TODO: implement listener
+                  if (state is PutProfileEditingState) {
+                    _Loading(context);
+                  }
+                  if (state is PutProfileEditSuccessState) {
+                    await UserSharedPreferences.setAddress(address.text);
+                    await UserSharedPreferences.setAvartar(avartar!);
+                    await UserSharedPreferences.setCountry(country.text);
+
+                    Navigator.of(context).pop();
+                    final snackBar =
+                        SnackBar(content: Text('Edit Profile Success!'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                  if (state is PutProfileEditErrorState) {
+                    Navigator.of(context).pop();
+                    final snackBar = SnackBar(content: Text(state.status));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        print('Form Complete');
+                        _formKey.currentState!.save();
+
+                        _dialogEdit(context, username.text, password.text,
+                            address.text, avartar!, country.text, email.text);
+                      }
+                    },
+                    child: const Text(
+                      'Edit Profile',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 5,
+              ),
+              BlocListener<DeleteProfileBloc, DeleteProfileState>(
+                listener: (context, state) async {
+                  // TODO: implement listener
+                  if (state is DeletingProfileState) {
+                    _Loading(context);
+                  }
+                  if (state is DeleteProfileSuccessState) {
+                    Navigator.of(context).pop();
+                    final snackBar =
+                        SnackBar(content: Text('Delete Profile Success!'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    await UserSecureStorage.setToken("");
+                    await UserSharedPreferences.setAddress("");
+                    await UserSharedPreferences.setUsername("");
+                    await UserSharedPreferences.setAvartar("");
+                    await UserSharedPreferences.setCountry("");
+                    await UserSharedPreferences.setEmail("");
+                    await UserSharedPreferences.setId(0);
+                    await UserSharedPreferences.setRoles([""]);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                    );
+                  }
+                  if (state is DeleteProfileErrorState) {
+                    Navigator.of(context).pop();
+                    final snackBar = SnackBar(content: Text(state.status));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextButton(
+                    onPressed: () async {
+                      _dialogDelete(context);
+                    },
+                    child: const Text(
+                      'Delete Profile',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 5,
+              ),
+              Container(
                 height: 50,
                 width: 250,
                 decoration: BoxDecoration(
@@ -317,90 +424,16 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      print('Form Complete');
-                      _formKey.currentState!.save();
-
-                      _dialogEdit(context, username.text, password.text,
-                          address.text, avartar!, country.text, email.text);
-                    }
+                    _dialoglogout(context);
                   },
                   child: const Text(
-                    'Edit Profile',
+                    'Logout',
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
                 ),
               ),
-            ),
-            Container(
-              height: 5,
-            ),
-            BlocListener<DeleteProfileBloc, DeleteProfileState>(
-              listener: (context, state) async {
-                // TODO: implement listener
-                if (state is DeletingProfileState) {
-                  _Loading(context);
-                }
-                if (state is DeleteProfileSuccessState) {
-                  Navigator.of(context).pop();
-                  final snackBar =
-                      SnackBar(content: Text('Delete Profile Success!'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  await UserSecureStorage.setToken("");
-                  await UserSharedPreferences.setAddress("");
-                  await UserSharedPreferences.setUsername("");
-                  await UserSharedPreferences.setAvartar("");
-                  await UserSharedPreferences.setCountry("");
-                  await UserSharedPreferences.setEmail("");
-                  await UserSharedPreferences.setId(0);
-                  await UserSharedPreferences.setRoles([""]);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()),
-                  );
-                }
-                if (state is DeleteProfileErrorState) {
-                  Navigator.of(context).pop();
-                  final snackBar = SnackBar(content: Text(state.status));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-              },
-              child: Container(
-                height: 50,
-                width: 250,
-                decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(20)),
-                child: TextButton(
-                  onPressed: () async {
-                    _dialogDelete(context);
-                  },
-                  child: const Text(
-                    'Delete Profile',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              height: 5,
-            ),
-            Container(
-              height: 50,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () async {
-                  _dialoglogout(context);
-                },
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

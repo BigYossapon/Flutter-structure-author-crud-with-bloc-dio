@@ -20,10 +20,8 @@ abstract class ProfileApiService {
   //     @Body() RequestEditProfileModel requestEditProfileModel);
 
   @PUT('user/edit/{id}')
-  Future<void> editProfile(
-      @Header('x-access-token') String token,
-      @Path("id") int id,
-      @Body() RequestEditProfileModel requestEditProfileModel);
+  Future<void> editProfile(@Header('x-access-token') String token,
+      @Path() int id, @Body() RequestEditProfileModel requestEditProfileModel);
 
   //DELETE
   @DELETE('user/delete/{id}')

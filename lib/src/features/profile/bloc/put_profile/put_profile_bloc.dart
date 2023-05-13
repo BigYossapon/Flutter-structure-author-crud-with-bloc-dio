@@ -14,12 +14,12 @@ class PutProfileBloc extends Bloc<PutProfileEvent, PutProfileState> {
     on<EditProfileEvent>((event, emit) async {
       // TODO: implement event handler
       //call token form secure storage
-
       emit(PutProfileEditingState());
       try {
         final token = await UserSecureStorage.getToken();
         await _profileRepository.editProfile(
             token!, event.id, event.requestEditProfileModel);
+        emit(PutProfileEditSuccessState());
       } catch (e) {
         emit(PutProfileEditErrorState(e.toString()));
       }

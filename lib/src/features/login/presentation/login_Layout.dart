@@ -134,8 +134,9 @@ class _LoginLayoutState extends State<LoginLayout> {
                     if (_formKey.currentState!.validate()) {
                       print('Form Complete');
                       _formKey.currentState!.save();
+                      String pw = password.text;
                       final requestLoginModel = RequestLoginModel(
-                          username: username.text, password: password.text);
+                          username: username.text, password: pw);
                       // requestLoginModel.username = username.text;
                       // requestLoginModel.password = password.text;
 

@@ -11,7 +11,7 @@ class PickerAvartarProfileBloc
   PickerAvartarProfileBloc() : super(PickingAvartarProfileState()) {
     on<PickerAvartarEvent>((event, emit) {
       // TODO: implement event handler
-
+      emit(PickingAvartarProfileState());
       if (event.avartar != null) {
         File? avartar = event.avartar;
         emit(PickedAvartarProfileState(avartar!));
