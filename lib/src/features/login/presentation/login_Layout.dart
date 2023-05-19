@@ -102,7 +102,7 @@ class _LoginLayoutState extends State<LoginLayout> {
                 }
                 if (state is PostLoginSuccessState) {
                   String? token = state.data.accessToken;
-                  int id = state.data.id;
+
                   await UserSecureStorage.setToken(token);
                   await UserSharedPreferences.setUsername(state.data.username);
                   await UserSharedPreferences.setEmail(state.data.email);
@@ -110,7 +110,7 @@ class _LoginLayoutState extends State<LoginLayout> {
                   await UserSharedPreferences.setCountry(state.data.country);
                   await UserSharedPreferences.setAvartar(state.data.avartar);
                   await UserSharedPreferences.setRoles(state.data.roles);
-                  await UserSharedPreferences.setId(id);
+                  await UserSharedPreferences.setId(state.data.id);
 
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

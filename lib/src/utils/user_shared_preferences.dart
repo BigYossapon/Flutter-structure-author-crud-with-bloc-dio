@@ -73,15 +73,15 @@ class UserSharedPreferences {
     return sharedPreferences.getString(_keyAvartar);
   }
 
-  static Future<bool> setId(int value) async {
+  static Future<bool> setId(String value) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return await sharedPreferences.setInt(_keyId, value!);
+    return await sharedPreferences.setString(_keyId, value);
   }
 
 // Read Data
-  static Future<int?> getId() async {
+  static Future<String?> getId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return sharedPreferences.getInt(_keyId);
+    return sharedPreferences.getString(_keyId);
   }
 
   static Future<bool> setRoles(List<String> value) async {

@@ -9,7 +9,7 @@ abstract class PutProfileEvent extends Equatable {
 
 class EditProfileEvent extends PutProfileEvent {
   RequestEditProfileModel requestEditProfileModel;
-  int id;
+  String id;
   EditProfileEvent(this.requestEditProfileModel, this.id);
   @override
   List<Object> get props => [];

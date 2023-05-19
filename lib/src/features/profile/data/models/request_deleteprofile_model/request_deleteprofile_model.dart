@@ -7,7 +7,7 @@ part 'request_deleteprofile_model.g.dart';
 @JsonSerializable()
 class RequestDeleteProfileModel {
   @JsonKey(name: 'id')
-  int? id;
+  String? id;
   @JsonKey(name: 'username')
   String? username;
 

@@ -10,7 +10,7 @@ RequestDeleteProfileModel _$RequestDeleteProfileModelFromJson(
         Map<String, dynamic> json) =>
     RequestDeleteProfileModel(
       username: json['username'] as String?,
-      id: json['id'] as int?,
+      id: json['id'] as String?,
     );
 
 Map<String, dynamic> _$RequestDeleteProfileModelToJson(

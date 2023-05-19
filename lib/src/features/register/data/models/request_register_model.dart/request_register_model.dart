@@ -16,9 +16,16 @@ class RequestRegisterModel {
   String? address;
   @JsonKey(name: 'country')
   String? country;
+  @JsonKey(name: 'avartar')
+  String? avartar;
 
   RequestRegisterModel(
-      {this.username, this.password, this.email, this.address, this.country});
+      {this.username,
+      this.password,
+      this.email,
+      this.address,
+      this.country,
+      this.avartar});
 
   factory RequestRegisterModel.fromJson(Map<String, dynamic> json) =>
       _$RequestRegisterModelFromJson(json);

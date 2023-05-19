@@ -9,7 +9,7 @@ abstract class DeleteProfileEvent extends Equatable {
 
 class Delete_ProfileEvent extends DeleteProfileEvent {
   RequestDeleteProfileModel requestDeleteProfileModel;
-  int id;
+  String id;
   Delete_ProfileEvent(this.requestDeleteProfileModel, this.id);
 
   @override

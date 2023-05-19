@@ -301,7 +301,8 @@ void _dialogRegister(
                         password: password,
                         address: address,
                         email: email,
-                        country: country);
+                        country: country,
+                        avartar: "plsuploadimg");
 
                     //Navigator.pop(context);
 

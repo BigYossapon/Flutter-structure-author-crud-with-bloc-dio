@@ -10,8 +10,8 @@ abstract class ProfileRepository {
   // Future<List<RequestModel>> getEmployeeData();
 
   Future<void> editProfile(
-      String token, int id, RequestEditProfileModel requestEditProfileModel);
+      String token, String id, RequestEditProfileModel requestEditProfileModel);
 
-  Future<void> deleteProfile(String token, int id,
+  Future<void> deleteProfile(String token, String id,
       RequestDeleteProfileModel requestDeleteProfileModel);
 }

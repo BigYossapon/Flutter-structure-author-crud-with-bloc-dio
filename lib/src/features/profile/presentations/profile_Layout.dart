@@ -382,7 +382,7 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                     await UserSharedPreferences.setAvartar("");
                     await UserSharedPreferences.setCountry("");
                     await UserSharedPreferences.setEmail("");
-                    await UserSharedPreferences.setId(0);
+                    await UserSharedPreferences.setId("");
                     await UserSharedPreferences.setRoles([""]);
                     Navigator.push(
                       context,
@@ -491,7 +491,7 @@ void _dialoglogout(BuildContext buildcontext) {
                     await UserSharedPreferences.setAvartar("");
                     await UserSharedPreferences.setCountry("");
                     await UserSharedPreferences.setEmail("");
-                    await UserSharedPreferences.setId(0);
+                    await UserSharedPreferences.setId("");
                     await UserSharedPreferences.setRoles([""]);
                     //UserSharedPreferences.password("");
                     Navigator.pop(context);
@@ -522,7 +522,7 @@ void _dialogDelete(BuildContext buildcontext) {
                   child: const Text('Cancel')),
               TextButton(
                   onPressed: () async {
-                    int? id = await UserSharedPreferences.getId();
+                    String? id = await UserSharedPreferences.getId();
                     String? username =
                         await UserSharedPreferences.getUsername();
                     final requestDeleteProfileModel =
@@ -561,7 +561,7 @@ void _dialogEdit(BuildContext buildcontext, String username, String password,
                         country: country,
                         email: email);
 
-                    int? id = await UserSharedPreferences.getId();
+                    String? id = await UserSharedPreferences.getId();
                     Navigator.pop(context);
                     buildcontext
                         .read<PutProfileBloc>()

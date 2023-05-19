@@ -27,7 +27,7 @@ class ProfileRepositoryimpl extends ProfileRepository {
   }
 
   @override
-  Future<void> deleteProfile(String token, int id,
+  Future<void> deleteProfile(String token, String id,
       RequestDeleteProfileModel requestDeleteProfileModel) {
     // TODO: implement deleteProfile
     return _profileApiService.deleteProfile(
@@ -35,8 +35,8 @@ class ProfileRepositoryimpl extends ProfileRepository {
   }
 
   @override
-  Future<void> editProfile(
-      String token, int id, RequestEditProfileModel requestEditProfileModel) {
+  Future<void> editProfile(String token, String id,
+      RequestEditProfileModel requestEditProfileModel) {
     // TODO: implement editProfile
     return _profileApiService.editProfile(token, id, requestEditProfileModel);
   }
