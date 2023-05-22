@@ -1,5 +1,6 @@
 # apptester
-
+2.3 version is for sql with id is int = postgres,mysql
+2.4=> version is for nosql with id is string = mongodb
 A new Flutter project.
 
 ## Getting Started
